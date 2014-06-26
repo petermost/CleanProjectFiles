@@ -23,7 +23,7 @@ import java.util.concurrent.*;
 import com.pera_software.aidkit.*;
 import com.pera_software.aidkit.DirectoryTreeDeleter.DeletionMode;
 import com.pera_software.aidkit.nio.file.Paths;
-import com.pera_software.visualstudio.*;
+import com.pera_software.aidkit.visualstudio.*;
 
 //##################################################################################################
 
