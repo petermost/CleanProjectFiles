@@ -21,7 +21,8 @@ import java.util.*;
 import java.nio.file.*;
 import java.util.concurrent.*;
 import com.pera_software.aidkit.*;
-import com.pera_software.aidkit.DirectoryTreeDeleter.DeletionMode;
+import com.pera_software.aidkit.nio.file.DirectoryTreeDeleter.DeletionMode;
+import com.pera_software.aidkit.nio.file.*;
 import com.pera_software.aidkit.nio.file.Paths;
 import com.pera_software.aidkit.visualstudio.*;
 
@@ -43,7 +44,7 @@ public class ProjectFileCleaner
 
 		List< Path > outputDirectories = new ArrayList<>();
 		for ( String solutionFileName : Settings.instance().solutionFileNames() ) {
-			Path solutionFilePath = java.nio.file.Paths.get( solutionFileName );
+			Path solutionFilePath = Paths.get( solutionFileName );
 			SolutionFile solutionFile = new SolutionFile( solutionFilePath );
 			List< ProjectFile > projectFiles = solutionFile.findProjects();
 			Console.printStatus( "Deleting temporary files of %d projects in '%s'", projectFiles.size(), solutionFilePath );
@@ -91,7 +92,7 @@ public class ProjectFileCleaner
 		if ( exception instanceof DirectoryNotEmptyException ) {
 			Console.printError( "Deleting the directory '%s' failed because it is not empty!", file );
 		} else {
-			Console.printError( "Deleting '%s' failed because: '%s'!", file, exception.getClass().getSimpleName() );
+			Console.printError( "Deleting the file/directory '%s' failed because: '%s'!", file, exception.getClass().getSimpleName() );
 		}
 	}
 
