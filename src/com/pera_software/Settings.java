@@ -20,7 +20,7 @@ package com.pera_software;
 import java.io.*;
 import java.util.*;
 import org.kohsuke.args4j.*;
-import com.pera_software.aidkit.*;
+import com.pera_software.aidkit.lang.*;
 
 //##################################################################################################
 

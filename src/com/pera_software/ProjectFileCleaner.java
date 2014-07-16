@@ -21,6 +21,7 @@ import java.util.*;
 import java.nio.file.*;
 import java.util.concurrent.*;
 import com.pera_software.aidkit.*;
+import com.pera_software.aidkit.collection.*;
 import com.pera_software.aidkit.nio.file.DirectoryTreeDeleter.DeletionMode;
 import com.pera_software.aidkit.nio.file.*;
 import com.pera_software.aidkit.nio.file.Paths;
@@ -54,7 +55,7 @@ public class ProjectFileCleaner
 			for ( ProjectFile projectFile : projectFiles ) {
 				List< Path > projectOutputDirectories = projectFile.findAllOutputDirectories( solutionFilePath );
 				projectOutputDirectories = Paths.normalize( projectOutputDirectories );
-				projectOutputDirectories = Paths.removeDuplicates( projectOutputDirectories );
+				projectOutputDirectories = Lists.removeDuplicates( projectOutputDirectories );
 				projectOutputDirectories = Paths.removeOverlaps( projectOutputDirectories );
 				outputDirectories.addAll( projectOutputDirectories );
 
@@ -69,7 +70,7 @@ public class ProjectFileCleaner
 		// Remove redundant directories:
 
 		DeletionMode deletionMode = Settings.instance().isSimulation() ? DeletionMode.Simulation : DeletionMode.Real;
-		outputDirectories = Paths.removeDuplicates( outputDirectories );
+		outputDirectories = Lists.removeDuplicates( outputDirectories );
 		outputDirectories = Paths.removeOverlaps( outputDirectories );
 		deleteDirectories( outputDirectories, deletionMode );
 		Console.printStatus( "Finished deleting." );
