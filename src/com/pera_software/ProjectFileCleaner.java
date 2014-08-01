@@ -43,37 +43,63 @@ public class ProjectFileCleaner
 		}
 		// Iterate over the given solution file names and delete the temporary files from the projects:
 
-		List< Path > outputDirectories = new ArrayList<>();
+		List< Path > outputDirectoryPaths = new ArrayList<>();
 		for ( String solutionFileName : Settings.instance().solutionFileNames() ) {
-			Path solutionFilePath = Paths.get( solutionFileName );
-			SolutionFile solutionFile = new SolutionFile( solutionFilePath );
+			SolutionFile solutionFile = new SolutionFile( Paths.get( solutionFileName ));
 			List< ProjectFile > projectFiles = solutionFile.findProjects();
-			Console.printStatus( "Deleting temporary files of %d projects in '%s'", projectFiles.size(), solutionFilePath );
+
+			Console.printStatus( "Deleting temporary files of %d projects in '%s'", projectFiles.size(), solutionFile.path() );
+			printOutputDirectories( solutionFile, projectFiles );
 
 			// Get the output directories from the projects:
 
 			for ( ProjectFile projectFile : projectFiles ) {
-				List< Path > projectOutputDirectories = projectFile.findAllOutputDirectories( solutionFilePath );
-				projectOutputDirectories = Paths.normalize( projectOutputDirectories );
-				projectOutputDirectories = Lists.removeDuplicates( projectOutputDirectories );
-				projectOutputDirectories = Paths.removeOverlaps( projectOutputDirectories );
-				outputDirectories.addAll( projectOutputDirectories );
-
-				// Show the directories per project:
-
-				Console.printStatus( "Output directories for '%s':", projectFile.path() );
-				for ( Path projectOutputDirectory : projectOutputDirectories ) {
-					Console.printStatus( "\t%s", projectOutputDirectory );
-				}
+				List< Path > outputDirectories = collectOutputDirectories( solutionFile, projectFile );
+				outputDirectories = Paths.normalize( outputDirectories );
+				outputDirectories = Lists.removeDuplicates( outputDirectories );
+				outputDirectories = Paths.removeOverlaps( outputDirectories );
+				outputDirectoryPaths.addAll( outputDirectories );
 			}
 		}
 		// Remove redundant directories:
 
 		DeletionMode deletionMode = Settings.instance().isSimulation() ? DeletionMode.Simulation : DeletionMode.Real;
-		outputDirectories = Lists.removeDuplicates( outputDirectories );
-		outputDirectories = Paths.removeOverlaps( outputDirectories );
-		deleteDirectories( outputDirectories, deletionMode );
+		outputDirectoryPaths = Lists.removeDuplicates( outputDirectoryPaths );
+		outputDirectoryPaths = Paths.removeOverlaps( outputDirectoryPaths );
+		deleteDirectories( outputDirectoryPaths, deletionMode );
 		Console.printStatus( "Finished deleting." );
+	}
+
+	//==============================================================================================
+
+	private static List< Path > collectOutputDirectories( SolutionFile solutionFile, ProjectFile projectFile )
+		throws Exception
+	{
+		List< Path > outputPaths = new ArrayList<>();
+		List< OutputDirectory > outputDirectories = projectFile.collectOutputDirectories( solutionFile.path() );
+		for ( OutputDirectory outputDirectory : outputDirectories ) {
+			outputPaths.addAll( outputDirectory.paths() );
+		}
+		return outputPaths;
+	}
+
+	//==============================================================================================
+
+	private static void printOutputDirectories( SolutionFile solutionFile, List< ProjectFile > projectFiles )
+		throws Exception
+	{
+		for ( ProjectFile projectFile : projectFiles ) {
+			List< OutputDirectory > outputDirectories = projectFile.collectOutputDirectories( solutionFile.path() );
+			Console.printStatus( "Output directories for '%s': ", projectFile.path() );
+			for ( OutputDirectory outputDirectory : outputDirectories ) {
+				if ( !outputDirectory.paths().isEmpty() ) {
+					Console.printStatus( "\t%s: ", outputDirectory.name() );
+					for ( Path outputDirectoryPath : outputDirectory.paths() ) {
+						Console.printStatus( "\t\t%s", outputDirectoryPath );
+					}
+				}
+			}
+		}
 	}
 
 	//==============================================================================================

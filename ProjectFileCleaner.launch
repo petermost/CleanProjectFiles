@@ -7,6 +7,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.pera_software.ProjectFileCleaner"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="C:\JazzWorkspaceSeparationDevelopment\CMWmars\CMWmars.sln --simulate"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="C:\JazzWorkspaceSeparationDevelopment\CMWmars\CMWmars.sln --verbose --simulate"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="CleanProjectFiles"/>
 </launchConfiguration>
