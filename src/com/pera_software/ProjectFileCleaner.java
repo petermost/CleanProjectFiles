@@ -89,6 +89,7 @@ public class ProjectFileCleaner
 		throws Exception
 	{
 		for ( ProjectFile projectFile : projectFiles ) {
+			printProjectBuildConfigurations( projectFile );
 			List< OutputDirectory > outputDirectories = projectFile.collectOutputDirectories( solutionFile.path() );
 			Console.printStatus( "Output directories for '%s': ", projectFile.path() );
 			for ( OutputDirectory outputDirectory : outputDirectories ) {
@@ -99,6 +100,18 @@ public class ProjectFileCleaner
 					}
 				}
 			}
+		}
+	}
+
+	//==============================================================================================
+
+	private static void printProjectBuildConfigurations( ProjectFile projectFile )
+		throws Exception
+	{
+		if ( Settings.instance().isVerbose() ) {
+			List< String > buildConfigurationNames = projectFile.findBuildConfigurationNames();
+			String buildConfigurations = String.join( ", ", buildConfigurationNames );
+			Console.printStatus( "Build configurations for '%s': { %s }", projectFile.path(), buildConfigurations );
 		}
 	}
 
