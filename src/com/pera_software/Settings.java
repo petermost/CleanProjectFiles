@@ -24,40 +24,30 @@ import com.pera_software.aidkit.lang.*;
 
 //##################################################################################################
 
-public class Settings
-{
+public final class Settings {
+
+	private static class Attributes {
+		@Option( name = "-v", aliases = "--verbose", usage = "show more verbose messages" )
+		private boolean isVerbose = false;
+
+		@Option( name = "-s", aliases = "--simulate", usage = "only simulate the deletion" )
+		private boolean isSimulation = false;
+
+		@Argument( metaVar = "solutionFileName...", required = true, usage = "the solution file name(s)" )
+		private List< String > solutionFileNames = new ArrayList<>();
+	}
+
+	private static Attributes _attributes = new Attributes();
+	private static CmdLineParser _commandLineParser = new CmdLineParser( _attributes );
+
 	//==============================================================================================
 
-	private static Settings s_instance = new Settings();
-
-	@Option( name = "-v", aliases = "--verbose", usage = "show more verbose messages" )
-	private boolean _isVerbose = false;
-
-	@Option( name = "-s", aliases = "--simulate", usage = "only simulate the deletion" )
-	private boolean _isSimulation = false;
-
-	@Argument( metaVar = "solutionFileName...", required = true, usage = "the solution file name(s)" )
-	private List< String > _solutionFileNames = new ArrayList<>();
-
-	private CmdLineParser _commandLineParser = new CmdLineParser( this );
-
-	//==============================================================================================
-
-	Settings()
-	{
+	Settings() {
 	}
 
 	//==============================================================================================
 
-	public static Settings instance()
-	{
-		return s_instance;
-	}
-
-	//==============================================================================================
-
-	public boolean parseCommandLine( String commandLineArguments[] )
-	{
+	public static boolean parseCommandLine( String commandLineArguments[] ) {
 		try {
 			_commandLineParser.parseArgument( commandLineArguments );
 			return true;
@@ -68,29 +58,25 @@ public class Settings
 
 	//==============================================================================================
 
-	public boolean isVerbose()
-	{
-		return _isVerbose;
+	public static boolean isVerbose() {
+		return _attributes.isVerbose;
 	}
 
 	//==============================================================================================
 
-	public boolean isSimulation()
-	{
-		return _isSimulation;
+	public static boolean isSimulation() {
+		return _attributes.isSimulation;
 	}
 
 	//==============================================================================================
 
-	public List< String > solutionFileNames()
-	{
-		return _solutionFileNames;
+	public static List< String > solutionFileNames() {
+		return _attributes.solutionFileNames;
 	}
 
 	//==============================================================================================
 
-	public List< String > usage()
-	{
+	public static List< String > usage() {
 		StringWriter usageWriter = new StringWriter();
 		_commandLineParser.printUsage( usageWriter, null );
 		String usage = usageWriter.toString();

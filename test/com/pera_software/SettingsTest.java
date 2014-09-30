@@ -41,7 +41,7 @@ public class SettingsTest
 
 	@Test
 	@SuppressWarnings("static-method")
-	public void testShortIsVerbose()
+	public void testShortVerboseOption()
 	{
 		String commandLineArguments[] = { "-v" };
 		Settings settings = new Settings();
@@ -53,7 +53,7 @@ public class SettingsTest
 
 	@Test
 	@SuppressWarnings("static-method")
-	public void testLongIsVerbose()
+	public void testLongVerboseOption()
 	{
 		String commandLineArguments[] = { "--verbose" };
 		Settings settings = new Settings();
@@ -65,7 +65,7 @@ public class SettingsTest
 
 	@Test
 	@SuppressWarnings("static-method")
-	public void testShortIsSimulation()
+	public void testShortSimulationOption()
 	{
 		String commandLineArguments[] = { "-s" };
 		Settings settings = new Settings();
@@ -77,7 +77,7 @@ public class SettingsTest
 
 	@Test
 	@SuppressWarnings("static-method")
-	public void testLongIsSimulation()
+	public void testLongSimulationOption()
 	{
 		String commandLineArguments[] = { "--simulate" };
 		Settings settings = new Settings();

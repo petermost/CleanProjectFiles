@@ -37,14 +37,14 @@ public class ProjectFileCleaner
 		throws Exception
 	{
 		Console.printStatus( "CleanProjectFiles (c) by P. Most, PERA Software Solutions GmbH" );
-		if ( !Settings.instance().parseCommandLine( arguments )) {
-			showUsage( Settings.instance().usage() );
+		if ( !Settings.parseCommandLine( arguments )) {
+			showUsage( Settings.usage() );
 			return;
 		}
 		// Iterate over the given solution file names and delete the temporary files from the projects:
 
 		List< Path > outputDirectoryPaths = new ArrayList<>();
-		for ( String solutionFileName : Settings.instance().solutionFileNames() ) {
+		for ( String solutionFileName : Settings.solutionFileNames() ) {
 			SolutionFile solutionFile = new SolutionFile( Paths.get( solutionFileName ));
 			List< ProjectFile > projectFiles = solutionFile.findProjects();
 
@@ -63,7 +63,7 @@ public class ProjectFileCleaner
 		}
 		// Remove redundant directories:
 
-		DeletionMode deletionMode = Settings.instance().isSimulation() ? DeletionMode.Simulation : DeletionMode.Real;
+		DeletionMode deletionMode = Settings.isSimulation() ? DeletionMode.Simulation : DeletionMode.Real;
 		outputDirectoryPaths = Lists.removeDuplicates( outputDirectoryPaths );
 		outputDirectoryPaths = Paths.removeOverlaps( outputDirectoryPaths );
 		deleteDirectories( outputDirectoryPaths, deletionMode );
@@ -88,15 +88,17 @@ public class ProjectFileCleaner
 	private static void printOutputDirectories( SolutionFile solutionFile, List< ProjectFile > projectFiles )
 		throws Exception
 	{
-		for ( ProjectFile projectFile : projectFiles ) {
-			printProjectBuildConfigurations( projectFile );
-			List< OutputDirectory > outputDirectories = projectFile.collectOutputDirectories( solutionFile.path() );
-			Console.printStatus( "Output directories for '%s': ", projectFile.path() );
-			for ( OutputDirectory outputDirectory : outputDirectories ) {
-				if ( !outputDirectory.paths().isEmpty() ) {
-					Console.printStatus( "\t%s: ", outputDirectory.name() );
-					for ( Path outputDirectoryPath : outputDirectory.paths() ) {
-						Console.printStatus( "\t\t%s", outputDirectoryPath );
+		if ( Settings.isVerbose() ) {
+			for ( ProjectFile projectFile : projectFiles ) {
+				printProjectBuildConfigurations( projectFile );
+				List< OutputDirectory > outputDirectories = projectFile.collectOutputDirectories( solutionFile.path() );
+				Console.printStatus( "Output directories for '%s': ", projectFile.path() );
+				for ( OutputDirectory outputDirectory : outputDirectories ) {
+					if ( !outputDirectory.paths().isEmpty() ) {
+						Console.printStatus( "\t%s: ", outputDirectory.name() );
+						for ( Path outputDirectoryPath : outputDirectory.paths() ) {
+							Console.printStatus( "\t\t%s", outputDirectoryPath );
+						}
 					}
 				}
 			}
@@ -108,7 +110,7 @@ public class ProjectFileCleaner
 	private static void printProjectBuildConfigurations( ProjectFile projectFile )
 		throws Exception
 	{
-		if ( Settings.instance().isVerbose() ) {
+		if ( Settings.isVerbose() ) {
 			List< String > buildConfigurationNames = projectFile.findBuildConfigurationNames();
 			String buildConfigurations = String.join( ", ", buildConfigurationNames );
 			Console.printStatus( "Build configurations for '%s': { %s }", projectFile.path(), buildConfigurations );
@@ -161,7 +163,7 @@ public class ProjectFileCleaner
 				DirectoryTreeDeleter treeDeleter = new DirectoryTreeDeleter( deletionMode );
 				treeDeleter.fileDeletionFailedSignal.connect( ProjectFileCleaner::fileDeletionFailed );
 
-				if ( Settings.instance().isVerbose() ) {
+				if ( Settings.isVerbose() ) {
 					treeDeleter.fileDeletedSignal.connect( ProjectFileCleaner::fileDeleted );
 				}
 				Files.walkFileTree( outputDirectory, treeDeleter );
