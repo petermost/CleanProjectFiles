@@ -36,7 +36,7 @@ public class ProjectFileCleaner
 	public static void main( String arguments[] )
 		throws Exception
 	{
-		Console.printStatus( "CleanProjectFiles (c) by P. Most, PERA Software Solutions GmbH" );
+		Console.printStatus( "CleanProjectFiles V1.1 (c) by P. Most, PERA Software Solutions GmbH" );
 		if ( !Settings.parseCommandLine( arguments )) {
 			showUsage( Settings.usage() );
 			return;
