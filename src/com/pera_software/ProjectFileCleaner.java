@@ -111,7 +111,7 @@ public class ProjectFileCleaner
 		throws Exception
 	{
 		if ( Settings.isVerbose() ) {
-			List< String > buildConfigurationNames = projectFile.findBuildConfigurationNames();
+			List< String > buildConfigurationNames = projectFile.getBuildConfigurationNames();
 			String buildConfigurations = String.join( ", ", buildConfigurationNames );
 			Console.printStatus( "Build configurations for '%s': { %s }", projectFile.path(), buildConfigurations );
 		}
