@@ -46,7 +46,7 @@ public class ProjectFileCleaner
 		List< Path > outputDirectoryPaths = new ArrayList<>();
 		for ( String solutionFileName : Settings.solutionFileNames() ) {
 			SolutionFile solutionFile = new SolutionFile( Paths.get( solutionFileName ));
-			List< ProjectFile > projectFiles = solutionFile.findProjects();
+			List< ProjectFile > projectFiles = solutionFile.loadProjects();
 
 			Console.printStatus( "Deleting temporary files of %d projects in '%s'", projectFiles.size(), solutionFile.path() );
 			printOutputDirectories( solutionFile, projectFiles );
