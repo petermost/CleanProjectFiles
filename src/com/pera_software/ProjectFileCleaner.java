@@ -46,7 +46,7 @@ public class ProjectFileCleaner
 		List< Path > outputDirectoryPaths = new ArrayList<>();
 		for ( String solutionFileName : Settings.solutionFileNames() ) {
 			SolutionFile solutionFile = new SolutionFile( Paths.get( solutionFileName ));
-			List< ProjectFile > projectFiles = solutionFile.findProjects();
+			List< ProjectFile > projectFiles = solutionFile.loadProjects();
 
 			Console.printStatus( "Deleting temporary files of %d projects in '%s'", projectFiles.size(), solutionFile.path() );
 			printOutputDirectories( solutionFile, projectFiles );
@@ -111,7 +111,7 @@ public class ProjectFileCleaner
 		throws Exception
 	{
 		if ( Settings.isVerbose() ) {
-			List< String > buildConfigurationNames = projectFile.findBuildConfigurationNames();
+			List< String > buildConfigurationNames = projectFile.getBuildConfigurationNames();
 			String buildConfigurations = String.join( ", ", buildConfigurationNames );
 			Console.printStatus( "Build configurations for '%s': { %s }", projectFile.path(), buildConfigurations );
 		}
